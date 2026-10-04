@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kuminy的香水库</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-decor" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#/">
+        <span class="brand-mark">✦</span>
+        <span class="brand-text">Kuminy的香水库</span>
+      </a>
+      <div class="header-actions">
+        <button class="btn btn-ghost btn-sm admin-only" id="importBtn" type="button">导入数据</button>
+        <button class="btn btn-ghost btn-sm admin-only" id="exportBtn" type="button">导出数据</button>
+        <button class="btn btn-primary admin-only" id="openAdd" type="button">
+          <span class="plus">＋</span> 添加香水
+        </button>
+        <button class="btn btn-sm lock-btn" id="keyBtn" type="button">🔑 密钥</button>
+      </div>
+      <input type="file" id="importInput" accept="application/json,.json" hidden />
+    </div>
+    <div class="header-line" aria-hidden="true"></div>
+  </header>
+
+  <main id="view" class="view"></main>
+
+  <footer class="site-footer">
+    <span>Kuminy的香水库</span>
+    <span class="dot-sep">·</span>
+    <span>私人香水收藏录</span>
+  </footer>
+
+  <!-- 添加 / 编辑 弹窗 -->
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-head">
+        <h2 id="modalTitle">添加香水</h2>
+        <button class="icon-btn" id="closeModal" type="button" aria-label="关闭">✕</button>
+      </header>
+
+      <form id="perfumeForm" class="form" novalidate>
+        <input type="hidden" id="editId" />
+
+        <div class="form-grid">
+          <div class="form-media">
+            <label class="upload-box" id="uploadBox" for="imageInput">
+              <img id="imagePreview" alt="香水预览" hidden />
+              <div class="upload-hint" id="uploadHint">
+                <span class="upload-icon">🖼</span>
+                <span>点击上传香水图片</span>
+                <small>支持 JPG / PNG，自动压缩</small>
+              </div>
+            </label>
+            <input type="file" id="imageInput" accept="image/*" hidden />
+            <button type="button" class="text-btn" id="clearImage" hidden>移除图片</button>
+          </div>
+
+          <div class="form-fields">
+            <div class="field">
+              <label for="name">香水名称 <em>*</em></label>
+              <input type="text" id="name" placeholder="例如：雨后花园" required />
+            </div>
+
+            <div class="field">
+              <label for="brand">品牌</label>
+              <input type="text" id="brand" placeholder="例如：Kuminy" />
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="gender">性别分类</label>
+                <select id="gender"></select>
+              </div>
+              <div class="field">
+                <label for="family">香调分类</label>
+                <select id="family"></select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="price">价格（元）</label>
+              <input type="number" id="price" min="0" step="1" placeholder="例如：1280" />
+            </div>
+          </div>
+        </div>
+
+        <div class="notes-group">
+          <div class="field">
+            <label for="topNotes">
+              <span class="note-dot dot-top"></span> 前调
+            </label>
+            <input type="text" id="topNotes" placeholder="用逗号分隔，例如：佛手柑，柠檬，薄荷" />
+          </div>
+          <div class="field">
+            <label for="middleNotes">
+              <span class="note-dot dot-middle"></span> 中调
+            </label>
+            <input type="text" id="middleNotes" placeholder="例如：玫瑰，茉莉，橙花" />
+          </div>
+          <div class="field">
+            <label for="baseNotes">
+              <span class="note-dot dot-base"></span> 后调
+            </label>
+            <input type="text" id="baseNotes" placeholder="例如：雪松，麝香，琥珀" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="review">香评 / 备注</label>
+          <textarea id="review" rows="3" placeholder="记录你对这支香水的感受……（可选）"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" id="cancelForm">取消</button>
+          <button type="submit" class="btn btn-primary" id="saveBtn">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 密钥解锁弹窗 -->
+  <div class="modal-backdrop" id="keyBackdrop" hidden>
+    <div class="modal modal-sm" role="dialog" aria-modal="true" aria-labelledby="keyTitle">
+      <header class="modal-head">
+        <h2 id="keyTitle">输入密钥</h2>
+        <button class="icon-btn" id="closeKey" type="button" aria-label="关闭">✕</button>
+      </header>
+      <div class="key-body">
+        <p class="key-hint">输入密钥后，才会显示「添加香水」「导入数据」「导出数据」功能。</p>
+        <div class="field">
+          <input type="password" id="keyInput" placeholder="请输入密钥" autocomplete="off" />
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" id="cancelKey">取消</button>
+          <button type="button" class="btn btn-primary" id="confirmKey">解锁</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
